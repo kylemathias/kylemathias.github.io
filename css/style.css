@@ -21,7 +21,7 @@
 .navbar-custom .navbar-brand:active,
 .navbar-custom .navbar-brand:focus,
 .navbar-custom .navbar-brand:hover {
-	color: #fff !important;
+	color: silver !important;
 }
 
 
@@ -72,8 +72,10 @@ Navigation Bar text Buttons. When page is over a setction, this changes the text
 .navbar-custom .navbar-nav li.active a:active,
 .navbar-custom .navbar-nav li.active a:focus,
 .navbar-custom .navbar-nav li.active a:hover {
-	color: #000000 !important;
-	background: #fff;
+	/* text color */
+	color: black !important;
+	/* box color */
+	background: #f4b042;
 	
 }
 
@@ -136,7 +138,7 @@ html {
 	font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-align: center;
 	padding-bottom: 250px;
-	padding-top: 100px;
+	padding-top: 120px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -148,7 +150,7 @@ html {
 	border: none;
 	outline: 0;
 	display: inline-block;
-	padding: 10px 25px;
+	padding: 15px 25px;
 	color: black;
 	background-color: #ddd;
 	text-align: center;
@@ -157,7 +159,7 @@ html {
 
 .hero-text button:hover {
 	background-color: #555;
-	color: white;
+	color: silver;
 }
 
 @media (max-width: 768px) {
@@ -175,24 +177,49 @@ html {
 }
 
 #section1 {
-	padding-top: 50px;
-	height: 500px;
-	color: #fff;
-	background-color: #1E88E5;
+	padding: 50px;	
+	color: black;
+	background-color: white;
+	display: flex;  
+    min-height: 500px;
+	
+	
 }
 
 #section2 {
-	padding-top: 50px;
-	height: 500px;
-	color: #fff;
-	background-color: #673ab7;
+	padding: 50px;
+	min-height: 500px;
+	color: black;
+	display: flex;  
+	background-color: #f4b042;
 }
 
 #section3 {
 	padding-top: 50px;
 	height: 500px;
-	color: #fff;
-	background-color: #ff9800;
+	color: black;
+	background-color: white;
+	
+}
+
+#section4 {
+	padding-top: 50px;	
+	color: black;
+	background-color: white;		
+}
+
+#docformat{
+	max-width: 720px;
+	max-height: 950px;
+	margin:auto;
+	height:950px;
+	width:100%;
+	text-align: center;
+}
+
+#margin {
+	height: 75px;
+	background-color: white;
 }
 
 footer {
@@ -209,7 +236,7 @@ footer .footer-above {
 }
 
 footer .footer-col {
-	margin-bottom: 50px
+	margin-bottom: 25px
 }
 
 footer .footer-below {
@@ -217,10 +244,16 @@ footer .footer-below {
 	background-color: #000000;
 	color: silver;
 }
+.about-border {
+    display: block;
+    max-width: 400px;
+    height: 3px;
+    background: black;
+    margin: 20px auto;
+}
 
 .icon-center {
-	position: relative;
-	top: calc(50% - 10px);
+	position: relative;	
 	color: silver;
 	height: 100%;
 	width: 100%;
@@ -235,15 +268,15 @@ footer .footer-below {
 .btn-outline:active,
 .btn-outline.active {
 	color: #black;
-	background: white;
-	border: solid 2px white;
+	background: #f4b042;
+	border: solid 2px #f4b042;
 }
 
 .btn-social {
 	display: inline-block;
 	height: 50px;
 	width: 50px;
-	border: 2px solid white;
+	border: 2px solid silver;
 	border-color: silver;
 	border-radius: 100%;
 	text-align: center;
@@ -261,8 +294,7 @@ footer .footer-below {
 }
 
 header {
-	/* This section calls the slideInFromLeft animation we defined above 
-			   \/ change this to 1s when you are done */
+	/* This section calls the slideInFromLeft animation we defined above */
 	animation: 1s ease-out 0s 1 slideInFromLeft;
 	background: black;	
 }
@@ -277,6 +309,51 @@ header {
 }
 
 h1 {
-	animation: 1s ease-out 0s 1 slideInFromTop;	
+	animation: 1s ease-out 0s 1 slideInFromTop;		
 	
+}
+
+.container {
+    position: relative;
+    width: 50%;
+}
+
+.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%)
+}
+
+.container:hover .image {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  background-color: #f4b042;
+  color: black;
+  font-size: 16px;
+  padding: 16px 32px;
+}
+
+.project-previews {
+	padding: 25px;
+	width: 100%;
+	height: 100%;	
 }
