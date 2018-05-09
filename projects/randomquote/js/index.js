@@ -1,5 +1,5 @@
-var quote;
-var author;
+var quote='';
+var author='';
 function getInfoApi(){
   
 $.ajax({
@@ -14,15 +14,19 @@ $.ajax({
     })
    
 .done(function(data) {
-  //create and add quote variable
+  //create and add quote variable 
   quote = JSON.stringify(data.quoteText);
   //create and add author varible while removing the quites with regex
-  author = JSON.stringify(data.quoteAuthor).split('"').join('');  
+  author = JSON.stringify(data.quoteAuthor).split('"').join('');
+  if(author == ''){ author = 'Unknown'};     
+	
   $('#quote_content').empty().append(quote)
   $('#quote_content').append("<br>")
   $('#quote_content').append("\n - " + author)
     });
 }
+
+
 
 function buildTweetUrl(quote, author){
   var tweetUrl = 'https://twitter.com/intent/tweet?text=' + quote + '\n - '+ author;
@@ -31,6 +35,10 @@ function buildTweetUrl(quote, author){
 }
 
 getInfoApi();
+
+
+
+
 $(document).ready(function() {
     $("#getMessage").on("click", function(){      
       getInfoApi();      
