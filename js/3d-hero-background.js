@@ -26,9 +26,7 @@
         }, 400); 
       }
     }
-  });
-
-  var $window = $(window),
+  });  var $window = $(window),
     windowWidth = window.innerWidth,
     windowHeight = window.innerHeight,
     rendererCanvasID = "3D-background-three-canvas5";
@@ -77,7 +75,9 @@
       return isTemplatePage() ? 5000 : 3500;
     }
   })();
-
+  // Track device pixel ratio for zoom detection
+  var lastPixelRatio = window.devicePixelRatio;
+  
   function init() {
     // Only continue if the canvas element exists
     if (!document.getElementById(rendererCanvasID)) {
@@ -126,11 +126,9 @@
     });
     renderer.setSize(windowWidth, windowHeight);
     
-    // Limit pixel ratio more aggressively on mobile for better performance
-    const pixelRatio = window.innerWidth < 768 ? 
-                        Math.min(window.devicePixelRatio, 1) : 
-                        Math.min(window.devicePixelRatio, 1.5);
-    renderer.setPixelRatio(pixelRatio);
+    // Use the full device pixel ratio for sharp rendering at any zoom level
+    // This makes lines much crisper when zooming in
+    renderer.setPixelRatio(window.devicePixelRatio);
 
     // Enhanced starfield that's visible on all pages - with reduced complexity
     var starGeometry = new THREE.Geometry();
@@ -204,18 +202,8 @@
     // Add slow camera movement for template pages
     if (isTemplatePage()) {
       camera.position.z = 150;  // Position camera a bit further back
-    }
-
-    // Throttled resize handler with debounce for better performance
-    let resizeTimeout;
-    window.addEventListener("resize", function() {
-      if (!resizeTimeout) {
-        resizeTimeout = setTimeout(function() {
-          resizeTimeout = null;
-          onWindowResize();
-        }, 250); // Further increased delay for throttling
-      }
-    }, false);
+    }    // Simple resize listener that matches the dist version
+    window.addEventListener('resize', onWindowResize, false);
   }
   // Variables for camera movement on template pages
   var cameraMovementAngle = 0;
@@ -223,15 +211,22 @@
   
   // Use consistent fps for all devices
   var fps = 30;
-  var fpsInterval = 1000 / fps;
-
-  function render(timestamp) {
+  var fpsInterval = 1000 / fps;  function render(timestamp) {
     // Skip rendering if canvas doesn't exist
     if (!document.getElementById(rendererCanvasID)) {
       return;
     }
     
     requestAnimationFrame(render);
+
+    // Detect zoom changes by comparing current with last known pixel ratio
+    if (window.devicePixelRatio !== lastPixelRatio) {
+      lastPixelRatio = window.devicePixelRatio;
+      // Update renderer to match the new pixel ratio
+      renderer.setPixelRatio(window.devicePixelRatio);
+      // Force a full renderer update
+      onWindowResize();
+    }
 
     // Throttle to desired fps for better performance
     if (!timestamp) timestamp = 0;
@@ -259,43 +254,21 @@
       cycle -= delta * 0.1;
       renderer.render(scene, camera);
     }
-  }  function onWindowResize() {
+  }function onWindowResize() {
+    // Get updated window dimensions
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
     
-    // Maintain consistent FOV regardless of screen size
-    const fov = 60;
-    camera.fov = fov;
-    
-    // Maintain consistent camera position
-    if (!isTemplatePage()) {
-      camera.position.z = 100; // Fixed camera position for all screen sizes
-    }
-    
-    // Ensure the grid stays in the same position
-    if (isHomepage() && group) {
-      // Keep fixed position values consistent across all screen sizes
-      const baseDistance = -1000;
-      const baseYPosition = -300;
-      
-      // Update grid position with fixed values
-      group.position.z = baseDistance;
-      group.position.y = baseYPosition;
-    }
-    
+    // Update camera aspect ratio
     camera.aspect = windowWidth / windowHeight;
     camera.updateProjectionMatrix();
+    
+    // Reset renderer size and pixel ratio to ensure sharpness at any zoom level
     renderer.setSize(windowWidth, windowHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
     
-    // Use a consistent pixel ratio for all devices for better line quality
-    const pixelRatio = Math.min(window.devicePixelRatio, 2);
-    renderer.setPixelRatio(pixelRatio);
-    
-    // Use a consistent frame rate for all screen sizes
-    fps = 30;
-    fpsInterval = 1000 / fps;
-    
-    console.log(`Window resized: ${windowWidth}×${windowHeight}, FOV: ${fov}, Camera Z: ${camera.position.z}`);
+    // Force a single render to update the display immediately
+    renderer.render(scene, camera);
   }
 
   function moveNoise() {
