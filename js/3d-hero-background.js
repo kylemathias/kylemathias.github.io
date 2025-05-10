@@ -82,15 +82,17 @@
     // Only continue if the canvas element exists
     if (!document.getElementById(rendererCanvasID)) {
       return;
-    }
-
-    //camera
+    }    //camera with consistent settings regardless of screen size
+    const fov = 60;
+    
     camera = new THREE.PerspectiveCamera(
-      60,
+      fov,
       windowWidth / windowHeight,
       1,
       10000
     );
+    
+    // Use fixed camera position for all screen sizes
     camera.position.set(0, 0, 100);
 
     //Scene
@@ -113,13 +115,11 @@
 
     scene.add(lights[0]);
     scene.add(lights[1]);
-    scene.add(lights[2]);
-
-    //WebGL Renderer with optimized parameters
+    scene.add(lights[2]);    //WebGL Renderer with optimized parameters
     renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById(rendererCanvasID), 
       alpha: true,
-      antialias: false,  // False for better performance
+      antialias: true,  // Enable antialiasing for smoother lines
       precision: 'mediump', // Medium precision for better performance
       // Use default power preference to ensure Firefox compatibility
       preserveDrawingBuffer: false // Better performance
@@ -163,28 +163,33 @@
     });
     
     var starField = new THREE.Points(starGeometry, starsMaterial);
-    scene.add(starField);
-
-    // Only add terrain on the homepage
+    scene.add(starField);    // Only add terrain on the homepage
     if (isHomepage()) {
       group = new THREE.Object3D();
-      group.position.set(0, -300, -1000);
-      group.rotation.set(29.8, 0, 0);
-
-      // Higher resolution grid with conditional scaling based on device performance
-      const segmentsX = window.innerWidth < 768 ? 96 : 192;
-      const segmentsY = window.innerWidth < 768 ? 48 : 96;
-      geometry = new THREE.PlaneGeometry(4000, 2000, segmentsX, segmentsY);
+        // Fixed base position values - consistent across all screen sizes
+      const baseDistance = -1000;
+      const baseYPosition = -300;
       
-      material = new THREE.MeshLambertMaterial({
+      // Set fixed positioning regardless of screen size
+      group.position.set(0, baseYPosition, baseDistance);
+      group.rotation.set(29.8, 0, 0);
+      
+      // Use consistently high resolution for all screen sizes
+      const segmentsX = 220; // High resolution for all devices
+      const segmentsY = 120; // High resolution for all devices
+      
+      console.log(`Grid position: y=${baseYPosition}, z=${baseDistance}, resolution: ${segmentsX}×${segmentsY}`);
+      
+      geometry = new THREE.PlaneGeometry(4000, 2000, segmentsX, segmentsY);
+        material = new THREE.MeshLambertMaterial({
         color: 0x76e4f7, // A pleasing blue color for the grid
         opacity: 1,
-        blending: THREE.NoBlending,
+        blending: THREE.NormalBlending, // Changed to normal blending for better line quality
         side: THREE.FrontSide,
         transparent: false,
         depthTest: true,
         wireframe: true,
-        wireframeLinewidth: 2, // Increased line thickness for better detail
+        wireframeLinewidth: 1, // Thinner lines look sharper with antialiasing
       });
       plane = new THREE.Mesh(geometry, material);
       plane.position.set(0, 0, 0);
@@ -212,13 +217,12 @@
       }
     }, false);
   }
-
   // Variables for camera movement on template pages
   var cameraMovementAngle = 0;
   var lastFrameTime = 0;
   
-  // Reduce fps on mobile devices
-  var fps = window.innerWidth < 768 ? 20 : 30;
+  // Use consistent fps for all devices
+  var fps = 30;
   var fpsInterval = 1000 / fps;
 
   function render(timestamp) {
@@ -255,24 +259,43 @@
       cycle -= delta * 0.1;
       renderer.render(scene, camera);
     }
-  }
-
-  function onWindowResize() {
+  }  function onWindowResize() {
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
+    
+    // Maintain consistent FOV regardless of screen size
+    const fov = 60;
+    camera.fov = fov;
+    
+    // Maintain consistent camera position
+    if (!isTemplatePage()) {
+      camera.position.z = 100; // Fixed camera position for all screen sizes
+    }
+    
+    // Ensure the grid stays in the same position
+    if (isHomepage() && group) {
+      // Keep fixed position values consistent across all screen sizes
+      const baseDistance = -1000;
+      const baseYPosition = -300;
+      
+      // Update grid position with fixed values
+      group.position.z = baseDistance;
+      group.position.y = baseYPosition;
+    }
+    
     camera.aspect = windowWidth / windowHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(windowWidth, windowHeight);
     
-    // Update pixel ratio on resize
-    const pixelRatio = window.innerWidth < 768 ? 
-                        Math.min(window.devicePixelRatio, 1) : 
-                        Math.min(window.devicePixelRatio, 1.5);
+    // Use a consistent pixel ratio for all devices for better line quality
+    const pixelRatio = Math.min(window.devicePixelRatio, 2);
     renderer.setPixelRatio(pixelRatio);
     
-    // Update fps based on screen size
-    fps = window.innerWidth < 768 ? 20 : 30;
+    // Use a consistent frame rate for all screen sizes
+    fps = 30;
     fpsInterval = 1000 / fps;
+    
+    console.log(`Window resized: ${windowWidth}×${windowHeight}, FOV: ${fov}, Camera Z: ${camera.position.z}`);
   }
 
   function moveNoise() {
