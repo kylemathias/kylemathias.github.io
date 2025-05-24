@@ -5,18 +5,23 @@
     return window.innerWidth <= 768;
   }
   
+  // Function to determine if we're on the home page
+  function isHomePage() {
+    return window.location.pathname.endsWith('index.html') || 
+           window.location.pathname === '/' || 
+           window.location.pathname.endsWith('/');
+  }
+  
   // Function to initialize critical navigation elements immediately
   function initCriticalNav() {
     const navElement = document.getElementById('animated-nav');
     if (!navElement) return;
     
     // Determine if we're on the home page
-    const isHomePage = window.location.pathname.endsWith('index.html') || 
-                       window.location.pathname === '/' || 
-                       window.location.pathname.endsWith('/');
+    const onHomePage = isHomePage();
     
     // Set initial positioning class based on page type
-    if (isHomePage) {
+    if (onHomePage) {
       navElement.classList.add('nav-center');
       navElement.classList.remove('nav-top-left');
       
@@ -40,7 +45,7 @@
     
     // Initialize mobile menu button behavior
     const mobileToggle = document.getElementById('mobile-nav-toggle');
-    if (mobileToggle && !isHomePage) {
+    if (mobileToggle && !onHomePage) {
       mobileToggle.addEventListener('click', function() {
         this.classList.toggle('active');
         navElement.classList.toggle('mobile-menu-open');
@@ -48,28 +53,109 @@
       });
     }
   }
-  
-  // Run critical nav setup immediately - this is key for improving LCP
+    // Make the nav positioning function available globally for history navigation
+  window.resetNavPosition = initCriticalNav;  // Run critical nav setup immediately - this is key for improving LCP
   initCriticalNav();
   
-  // Defer non-critical navigation setup
+  // Force consistency by also checking if the navigation position
+  // matches the current URL - fixes cases where page cache may have
+  // preserved an incorrect state
+  (function checkNavConsistency() {
+    const pageNavElement = document.getElementById('animated-nav');
+    if (pageNavElement) {
+      const shouldBeHomePage = isHomePage();
+      const hasHomePageClass = pageNavElement.classList.contains('nav-center');
+      
+      // If there's a mismatch between the current URL and navigation state,
+      // force the correct positioning immediately
+      if (shouldBeHomePage !== hasHomePageClass) {
+        console.log('Detected navigation position mismatch, fixing...');
+        handleHistoryNavigation();
+      }
+    }
+  })();
+    // Function to update active link highlighting
+  function updateActiveLinks() {
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Handle all nav links
+    const navLinks = document.querySelectorAll('#animated-nav .nav-link');
+    navLinks.forEach(link => {
+      const linkPath = link.getAttribute('href');
+      if (linkPath === currentPath) {
+        link.classList.add('active-link');
+      } else {
+        link.classList.remove('active-link');
+      }
+    });
+    
+    // Handle header link for home page
+    const headerLink = document.querySelector('#animated-nav .nav-header-link');
+    if (headerLink) {
+      if (isHomePage()) {
+        headerLink.classList.add('active-link');
+      } else {
+        headerLink.classList.remove('active-link');
+      }
+    }
+  }
+  
+  // Function to handle nav position on history navigation
+  function handleHistoryNavigation() {
+    console.log('History navigation detected - fixing nav position');
+    
+    // Force the correct nav position
+    initCriticalNav();
+    
+    // Update active links
+    updateActiveLinks();
+  }
+  
+  // Check if this page load is from history navigation (back/forward buttons)
+  if (window.performance && window.performance.navigation) {
+    // navigation.type: 2 means the page was navigated to using back/forward buttons
+    if (window.performance.navigation.type === 2) {
+      // This is a back/forward navigation, so we need to make sure the nav is positioned correctly
+      handleHistoryNavigation();
+    }
+  } else if (window.performance && window.performance.getEntriesByType) {
+    // Newer method for checking navigation type
+    const navEntries = window.performance.getEntriesByType('navigation');
+    if (navEntries.length > 0 && navEntries[0].type === 'back_forward') {
+      // This is a back/forward navigation
+      handleHistoryNavigation();
+    }
+  }
+  
+  // Add a dedicated function for bfcache (back-forward cache) scenarios
+  window.addEventListener('pageshow', function(event) {
+    // If the page is loaded from the bfcache
+    if (event.persisted) {
+      console.log('Page restored from bfcache, fixing nav position');
+      handleHistoryNavigation();
+    }
+  });
+  // Listen for browser history navigation events (back/forward buttons)
+  window.addEventListener('popstate', function() {
+    // Reset the nav position immediately when history state changes
+    handleHistoryNavigation();
+  });
+    // Defer non-critical navigation setup
   document.addEventListener('DOMContentLoaded', function() {
     const navElement = document.getElementById('animated-nav');
     if (!navElement) return;
     
-    const isHomePage = window.location.pathname.endsWith('index.html') || 
-                       window.location.pathname === '/' || 
-                       window.location.pathname.endsWith('/');
+    // Always re-run positioning logic to ensure consistency across browsers
+    // This catches edge cases, especially in Safari and Firefox
+    handleHistoryNavigation();
     
-    // Store current page for navigation reference
+    const onHomePage = isHomePage();
+      // Store current page for navigation reference
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Complete page highlighting
-    highlightCurrentPage();
     
     // Set up interaction events - only for desktop view
     if (!isMobileDevice()) {
-      if (isHomePage) {
+      if (onHomePage) {
         setupHomePageLinks();
       } else {
         setupInnerPageLinks();
@@ -98,8 +184,7 @@
         window.location.href = targetHref;
       }, 50);
     }
-    
-    function highlightCurrentPage() {
+      function highlightCurrentPage() {
       // Handle all nav links
       const navLinks = document.querySelectorAll('#animated-nav .nav-link');
       navLinks.forEach(link => {
@@ -113,7 +198,7 @@
       
       // Handle header link for home page
       const headerLink = document.querySelector('#animated-nav .nav-header-link');
-      if (headerLink && isHomePage) {
+      if (headerLink && isHomePage()) {
         headerLink.classList.add('active-link');
       } else if (headerLink) {
         headerLink.classList.remove('active-link');
