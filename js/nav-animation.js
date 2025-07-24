@@ -42,15 +42,24 @@
         homeLink.style.fontSize = '1.5em';
       }
     }
-    
-    // Initialize mobile menu button behavior
+      // Initialize mobile menu button behavior
     const mobileToggle = document.getElementById('mobile-nav-toggle');
     if (mobileToggle && !onHomePage) {
-      mobileToggle.addEventListener('click', function() {
+      // Remove any existing event listeners to prevent duplicates
+      const existingHandler = mobileToggle._clickHandler;
+      if (existingHandler) {
+        mobileToggle.removeEventListener('click', existingHandler);
+      }
+      
+      // Create new handler and store reference for future removal
+      const clickHandler = function() {
         this.classList.toggle('active');
         navElement.classList.toggle('mobile-menu-open');
         console.log('Menu toggled');  // Debug
-      });
+      };
+      
+      mobileToggle._clickHandler = clickHandler;
+      mobileToggle.addEventListener('click', clickHandler);
     }
   }
     // Make the nav positioning function available globally for history navigation
@@ -139,8 +148,7 @@
   window.addEventListener('popstate', function() {
     // Reset the nav position immediately when history state changes
     handleHistoryNavigation();
-  });
-    // Defer non-critical navigation setup
+  });    // Defer non-critical navigation setup
   document.addEventListener('DOMContentLoaded', function() {
     const navElement = document.getElementById('animated-nav');
     if (!navElement) return;
@@ -165,16 +173,50 @@
       setupMobileNavigation();
     }
     
-    function setupMobileNavigation() {
-      // Setup all links to navigate without animations on mobile
-      const allLinks = document.querySelectorAll('#animated-nav a');
+    // Additional mobile menu setup as fallback - ensure it works regardless
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    if (mobileToggle && !onHomePage) {
+      // Ensure the mobile menu button has a working click handler
+      if (!mobileToggle._clickHandler) {
+        const clickHandler = function() {
+          this.classList.toggle('active');
+          navElement.classList.toggle('mobile-menu-open');
+          console.log('Fallback mobile menu toggled');  // Debug
+        };
+        
+        mobileToggle._clickHandler = clickHandler;
+        mobileToggle.addEventListener('click', clickHandler);
+      }
+    }
+      function setupMobileNavigation() {
+      // Setup all navigation links to work without animations on mobile
+      const navLinks = document.querySelectorAll('#animated-nav .nav-link, #animated-nav .nav-header-link');
       
-      allLinks.forEach(link => {
+      navLinks.forEach(link => {
         // Remove any existing event listeners and set default behavior
         link.removeEventListener('click', preventDefaultNavigation);
         
         // No animations needed for mobile, just let links work normally
       });
+      
+      // Ensure mobile menu button functionality is preserved
+      const mobileToggle = document.getElementById('mobile-nav-toggle');
+      if (mobileToggle) {
+        // Re-setup mobile menu if needed (in case it was affected)
+        if (!mobileToggle._clickHandler) {
+          const navElement = document.getElementById('animated-nav');
+          const clickHandler = function() {
+            this.classList.toggle('active');
+            if (navElement) {
+              navElement.classList.toggle('mobile-menu-open');
+            }
+            console.log('Mobile menu toggled');  // Debug
+          };
+          
+          mobileToggle._clickHandler = clickHandler;
+          mobileToggle.addEventListener('click', clickHandler);
+        }
+      }
     }
     
     function preventDefaultNavigation(e) {
@@ -341,4 +383,26 @@
       }, 100); // Small delay to prevent multiple reloads
     });
   });
+
+  // Additional safety net for mobile menu - wait for full page load
+  window.addEventListener('load', function() {
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    const navElement = document.getElementById('animated-nav');
+    
+    if (mobileToggle && navElement && !isHomePage()) {
+      // Final check - ensure mobile menu button works
+      if (!mobileToggle._clickHandler) {
+        console.log('Setting up mobile menu as final safety net');
+        const clickHandler = function() {
+          this.classList.toggle('active');
+          navElement.classList.toggle('mobile-menu-open');
+          console.log('Safety net mobile menu toggled');
+        };
+        
+        mobileToggle._clickHandler = clickHandler;
+        mobileToggle.addEventListener('click', clickHandler);
+      }
+    }
+  });
+
 })();
