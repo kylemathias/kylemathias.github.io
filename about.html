@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About Kyle Mathias - Senior Business Systems and Automation Engineer specializing in Integrations, iPaaS, and Full Stack Web Development. Learn more about my background and professional journey.">
-    <meta name="keywords" content="Kyle Mathias, about, Senior Business Systems Engineer, Automation Engineer, Integrations, iPaaS, Full Stack Web Development, portfolio">
+    <meta name="description" content="About Kyle Mathias. Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
+    <meta name="keywords" content="Kyle Mathias, about, Senior Software Engineer, Internal Tools, Integrations, APIs, iPaaS, Azure, Cosmos DB, RAG, portfolio">
     <title>About | Kyle Mathias</title>
       <!-- Standard Image Meta Tag -->
     <meta name="image" content="https://kylemathias.com/assets/shareimage.jpg">
@@ -14,20 +14,20 @@
     <meta property="og:url" content="https://kylemathias.com">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Kyle Mathias">
-    <meta property="og:description" content="Kyle Mathias is a Senior Business Systems and Automation Engineer specializing in Integrations, iPaaS, and Full Stack Web Development. Explore his portfolio, resume, and contact information.">
+    <meta property="og:description" content="Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     <meta property="og:image" content="https://kylemathias.com/assets/shareimage.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Kyle Mathias - Senior Business Systems and Automation Engineer, Integrations, iPaaS, and Full Stack Web Development">
+    <meta property="og:image:alt" content="Kyle Mathias - Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="kylemathias.com">
     <meta property="twitter:url" content="https://kylemathias.com">
     <meta name="twitter:title" content="Kyle Mathias">
-    <meta name="twitter:description" content="Kyle Mathias is a Senior Business Systems and Automation Engineer specializing in Integrations, iPaaS, and Full Stack Web Development. Explore his portfolio, resume, and contact information.">
+    <meta name="twitter:description" content="Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     <meta name="twitter:image" content="https://kylemathias.com/assets/shareimage.jpg">
-    <meta name="twitter:image:alt" content="Kyle Mathias - Senior Business Systems and Automation Engineer, Integrations, iPaaS, and Full Stack Web Development">
+    <meta name="twitter:image:alt" content="Kyle Mathias - Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     
     <!-- Preconnect to critical origins -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,8 +60,12 @@
         #animated-nav.nav-top-left {
           top: 20px;
           left: 20px;
-          background-color: rgba(0, 0, 0, 0.7);
-          border-radius: 5px;
+          background-color: rgba(5, 14, 28, 0.66);
+          border: 1px solid rgba(125, 211, 252, 0.2);
+          border-radius: 22px;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
+          backdrop-filter: blur(18px) saturate(150%);
+          -webkit-backdrop-filter: blur(18px) saturate(150%);
         }
         
         #animated-nav .nav-header {
@@ -198,15 +202,6 @@
           }
         }
         
-        #page-content {
-          margin-top: 80px;
-          color: white;
-          padding: 20px;
-          max-width: 800px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-        
         .about-content h2 {
           margin-top: 2em;
           font-size: 1.5em;
@@ -217,14 +212,7 @@
           margin-bottom: 1.5em;
           font-size: 1.1em;
         }
-        
-        .subtitle-skills {
-          font-size: 1em;
-          color: rgba(255, 255, 255, 0.8);
-          margin-top: 0;
-          margin-bottom: 1.5em;
-          letter-spacing: 1px;
-        }    </style>
+    </style>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LE73LE639D"></script>
@@ -236,7 +224,7 @@
       gtag('config', 'G-LE73LE639D');
     </script>
 </head>
-<body>
+<body class="about-page">
     <!-- Animated Navigation Component with top-left positioning -->
     <div id="animated-nav" class="nav-top-left">
         <button id="mobile-nav-toggle" aria-label="Toggle mobile menu">
@@ -245,43 +233,48 @@
             <span></span>
         </button>
         <div class="nav-header">
-            <a href="index.html" class="nav-header-link">Kyle Mathias</a>
+          <a href="index.html" class="nav-header-link">Kyle Mathias</a>
+          <p class="subtitle">Senior Software Engineer (Internal Tools, Integrations & Automation)</p>
+          <p class="subtitle-skills">Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG</p>
         </div>
         <div class="nav-links">
             <a href="about.html" class="nav-link active-link" id="about-link">About</a>
             <a href="resume.html" class="nav-link" id="resume-link">Resume</a>
+          <a href="projects.html" class="nav-link" id="projects-link">Projects</a>
             <a href="contact.html" class="nav-link" id="contact-link">Contact</a>
         </div>
     </div>
 
     <!-- Page content container - moved before canvas for better LCP -->
-<div id="page-content" class="content-container">
-  <h1 class="mb-4">About Me</h1>
+<main id="page-content" class="content-container inner-page-shell">
+  <header class="page-hero">
+    <h1>About Me</h1>
+    <p class="page-intro">I build internal tools and integrations that remove friction, reduce manual work, and make complex workflows dependable at scale.</p>
+  </header>
 
-  <!-- Target role headline -->
-  <h2 class="mb-3">Senior Business Systems & Automation Engineer</h2>
-  <p class="subtitle-skills">Integrations · iPaaS · Full Stack Web Development</p>
-
-  <div class="about-content">
-    <p>
-      I build integrations and internal tools that remove friction for teams.
-      My work focuses on turning messy content and workflows into reliable,
-      auditable systems that people can trust.
-    </p>
-    <p>
-      I approach problems by starting with the user need, designing a practical
-      technical solution, and delivering measurable outcomes. I prioritize
-      reliability, observability, and secure handling of data so teams can
-      depend on automated systems in production.
-    </p>
-    <p>
-      Outside of work I enjoy time with my family, tackling home projects,
-      and learning new tools and techniques in AI and web development. I value
-      clear communication, collaboration, and a pragmatic approach to solving
-      hard problems.
-    </p>
-  </div>
-</div>
+  <section class="page-panel about-panel">
+    <h2>How I Work</h2>
+    <div class="about-content">
+      <p>
+        I build integrations and internal tools that remove friction for teams.
+        My work focuses on turning messy content and workflows into reliable,
+        auditable systems that people can trust.
+      </p>
+      <p>
+        I approach problems by starting with the user need, designing a practical
+        technical solution, and delivering measurable outcomes. I prioritize
+        reliability, observability, and secure handling of data so teams can
+        depend on automated systems in production.
+      </p>
+      <p>
+        Outside of work I enjoy time with my family, tackling home projects,
+        and learning new tools and techniques in AI and web development. I value
+        clear communication, collaboration, and a pragmatic approach to solving
+        hard problems.
+      </p>
+    </div>
+  </section>
+</main>
 
     <!-- Canvas for 3D background - loaded after critical content -->
     <canvas id="3D-background-three-canvas5"></canvas>

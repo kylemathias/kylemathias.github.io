@@ -1,408 +1,312 @@
-// Optimized Navigation animation handler
+// Navigation transition controller
 (function() {
-  // Function to check if device is mobile based on screen width
+  const MOBILE_BREAKPOINT = 768;
+  const NAV_DIRECTION_KEY = 'km-nav-direction';
+  const FALLBACK_DURATION_MS = 560;
+
   function isMobileDevice() {
-    return window.innerWidth <= 768;
+    return window.innerWidth <= MOBILE_BREAKPOINT;
   }
-  
-  // Function to determine if we're on the home page
+
   function isHomePage() {
-    return window.location.pathname.endsWith('index.html') || 
-           window.location.pathname === '/' || 
-           window.location.pathname.endsWith('/');
+    return window.location.pathname.endsWith('index.html') ||
+      window.location.pathname === '/' ||
+      window.location.pathname.endsWith('/');
   }
-  
-  // Function to initialize critical navigation elements immediately
-  function initCriticalNav() {
-    const navElement = document.getElementById('animated-nav');
-    if (!navElement) return;
-    
-    // Determine if we're on the home page
-    const onHomePage = isHomePage();
-    
-    // Set initial positioning class based on page type
-    if (onHomePage) {
-      navElement.classList.add('nav-center');
-      navElement.classList.remove('nav-top-left');
-      
-      // Set active class on home link immediately
-      const homeLink = document.querySelector('#animated-nav .nav-header-link');
-      if (homeLink) {
-        homeLink.classList.add('active-link');
-        // Ensure consistent initial font size
-        homeLink.style.fontSize = '3em';
-      }
-    } else {
-      navElement.classList.add('nav-top-left');
-      navElement.classList.remove('nav-center');
-      
-      // Set consistent font size in subpages
-      const homeLink = document.querySelector('#animated-nav .nav-header-link');
-      if (homeLink) {
-        homeLink.style.fontSize = '1.5em';
-      }
-    }
-      // Initialize mobile menu button behavior
-    const mobileToggle = document.getElementById('mobile-nav-toggle');
-    if (mobileToggle && !onHomePage) {
-      // Remove any existing event listeners to prevent duplicates
-      const existingHandler = mobileToggle._clickHandler;
-      if (existingHandler) {
-        mobileToggle.removeEventListener('click', existingHandler);
-      }
-      
-      // Create new handler and store reference for future removal
-      const clickHandler = function() {
-        this.classList.toggle('active');
-        navElement.classList.toggle('mobile-menu-open');
-        console.log('Menu toggled');  // Debug
-      };
-      
-      mobileToggle._clickHandler = clickHandler;
-      mobileToggle.addEventListener('click', clickHandler);
+
+  function supportsViewTransitions() {
+    return !isMobileDevice() &&
+      typeof document.startViewTransition === 'function' &&
+      typeof CSS !== 'undefined' &&
+      typeof CSS.supports === 'function' &&
+      CSS.supports('view-transition-name: site-nav-shell');
+  }
+
+  function getNavElement() {
+    return document.getElementById('animated-nav');
+  }
+
+  function getHomeLink(navElement) {
+    return navElement ? navElement.querySelector('.nav-header-link') : null;
+  }
+
+  function getNavLinks(navElement) {
+    return navElement ? Array.from(navElement.querySelectorAll('.nav-link')) : [];
+  }
+
+  function isPlainLeftClick(event) {
+    return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+  }
+
+  function getResolvedPath(href) {
+    return new URL(href, window.location.href).pathname;
+  }
+
+  function isCurrentPageLink(href) {
+    return getResolvedPath(href) === window.location.pathname;
+  }
+
+  function isHomeTarget(href) {
+    const targetPath = getResolvedPath(href);
+    return targetPath.endsWith('/index.html') || targetPath === '/' || targetPath.endsWith('/');
+  }
+
+  function setTransitionDirection(direction) {
+    try {
+      sessionStorage.setItem(NAV_DIRECTION_KEY, direction);
+    } catch (error) {
+      return;
     }
   }
-    // Make the nav positioning function available globally for history navigation
-  window.resetNavPosition = initCriticalNav;  // Run critical nav setup immediately - this is key for improving LCP
-  initCriticalNav();
-  
-  // Force consistency by also checking if the navigation position
-  // matches the current URL - fixes cases where page cache may have
-  // preserved an incorrect state
-  (function checkNavConsistency() {
-    const pageNavElement = document.getElementById('animated-nav');
-    if (pageNavElement) {
-      const shouldBeHomePage = isHomePage();
-      const hasHomePageClass = pageNavElement.classList.contains('nav-center');
-      
-      // If there's a mismatch between the current URL and navigation state,
-      // force the correct positioning immediately
-      if (shouldBeHomePage !== hasHomePageClass) {
-        console.log('Detected navigation position mismatch, fixing...');
-        handleHistoryNavigation();
-      }
+
+  function consumeTransitionDirection() {
+    let direction = '';
+
+    try {
+      direction = sessionStorage.getItem(NAV_DIRECTION_KEY) || '';
+      sessionStorage.removeItem(NAV_DIRECTION_KEY);
+    } catch (error) {
+      direction = '';
     }
-  })();
-    // Function to update active link highlighting
+
+    if (!direction) {
+      return;
+    }
+
+    document.documentElement.dataset.navDirection = direction;
+
+    window.setTimeout(function() {
+      delete document.documentElement.dataset.navDirection;
+    }, 900);
+  }
+
   function updateActiveLinks() {
+    const navElement = getNavElement();
+    if (!navElement) {
+      return;
+    }
+
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Handle all nav links
-    const navLinks = document.querySelectorAll('#animated-nav .nav-link');
-    navLinks.forEach(link => {
+
+    getNavLinks(navElement).forEach(function(link) {
       const linkPath = link.getAttribute('href');
-      if (linkPath === currentPath) {
-        link.classList.add('active-link');
-      } else {
-        link.classList.remove('active-link');
-      }
+      link.classList.toggle('active-link', linkPath === currentPath);
     });
-    
-    // Handle header link for home page
-    const headerLink = document.querySelector('#animated-nav .nav-header-link');
+
+    const headerLink = getHomeLink(navElement);
     if (headerLink) {
-      if (isHomePage()) {
-        headerLink.classList.add('active-link');
-      } else {
-        headerLink.classList.remove('active-link');
-      }
+      headerLink.classList.toggle('active-link', isHomePage());
     }
   }
-  
-  // Function to handle nav position on history navigation
-  function handleHistoryNavigation() {
-    console.log('History navigation detected - fixing nav position');
-    
-    // Force the correct nav position
-    initCriticalNav();
-    
-    // Update active links
+
+  function resetTransitionClasses(navElement) {
+    navElement.classList.remove('is-transitioning-to-inner', 'is-transitioning-to-home');
+    delete navElement.dataset.transitioning;
+    document.body.classList.remove('nav-transitioning-away', 'nav-transitioning-home');
+  }
+
+  function applyNavState(onHomePage) {
+    const navElement = getNavElement();
+    if (!navElement) {
+      return;
+    }
+
+    navElement.classList.toggle('nav-center', onHomePage);
+    navElement.classList.toggle('nav-top-left', !onHomePage);
+    navElement.dataset.pageRole = onHomePage ? 'home' : 'inner';
+
+    const headerLink = getHomeLink(navElement);
+    if (headerLink) {
+      headerLink.style.fontSize = onHomePage ? '3em' : '1.5em';
+      headerLink.style.letterSpacing = onHomePage ? '0.02em' : '0.01em';
+    }
+
+    const subtitles = navElement.querySelectorAll('.subtitle, .subtitle-skills');
+    subtitles.forEach(function(element) {
+      element.setAttribute('aria-hidden', onHomePage ? 'false' : 'true');
+      element.style.removeProperty('max-height');
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+      element.style.removeProperty('margin-top');
+      element.style.removeProperty('margin-bottom');
+      element.style.removeProperty('filter');
+      element.style.removeProperty('pointer-events');
+      element.style.removeProperty('overflow');
+    });
+
+    resetTransitionClasses(navElement);
     updateActiveLinks();
   }
-  
-  // Check if this page load is from history navigation (back/forward buttons)
-  if (window.performance && window.performance.navigation) {
-    // navigation.type: 2 means the page was navigated to using back/forward buttons
-    if (window.performance.navigation.type === 2) {
-      // This is a back/forward navigation, so we need to make sure the nav is positioned correctly
-      handleHistoryNavigation();
+
+  function setupMobileToggle(navElement, onHomePage) {
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    if (!mobileToggle) {
+      return;
     }
+
+    if (mobileToggle._clickHandler) {
+      mobileToggle.removeEventListener('click', mobileToggle._clickHandler);
+      delete mobileToggle._clickHandler;
+    }
+
+    if (onHomePage) {
+      return;
+    }
+
+    const clickHandler = function() {
+      this.classList.toggle('active');
+      navElement.classList.toggle('mobile-menu-open');
+    };
+
+    mobileToggle._clickHandler = clickHandler;
+    mobileToggle.addEventListener('click', clickHandler);
+  }
+
+  function handleHistoryNavigation() {
+    applyNavState(isHomePage());
+  }
+
+  function navigateAfterFallback(targetHref, direction) {
+    window.setTimeout(function() {
+      setTransitionDirection(direction);
+      window.location.href = targetHref;
+    }, FALLBACK_DURATION_MS);
+  }
+
+  function triggerFallbackHomeExit(navElement, targetHref) {
+    if (navElement.dataset.transitioning === 'true') {
+      return;
+    }
+
+    navElement.dataset.transitioning = 'true';
+    document.body.classList.add('nav-transitioning-away');
+    navElement.classList.add('is-transitioning-to-inner');
+    navigateAfterFallback(targetHref, 'to-inner');
+  }
+
+  function triggerFallbackHomeEntry(navElement, targetHref) {
+    if (navElement.dataset.transitioning === 'true') {
+      return;
+    }
+
+    navElement.dataset.transitioning = 'true';
+    document.body.classList.add('nav-transitioning-home');
+    navElement.classList.remove('nav-top-left');
+    navElement.classList.add('nav-center', 'is-transitioning-to-home');
+    navigateAfterFallback(targetHref, 'to-home');
+  }
+
+  function attachDesktopNavigation(navElement, useViewTransitions) {
+    const headerLink = getHomeLink(navElement);
+    const navLinks = getNavLinks(navElement);
+
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        const targetHref = this.getAttribute('href');
+        if (!targetHref || !isPlainLeftClick(event) || isCurrentPageLink(targetHref)) {
+          return;
+        }
+
+        if (useViewTransitions) {
+          if (isHomePage()) {
+            setTransitionDirection('to-inner');
+            document.body.classList.add('nav-transitioning-away');
+            navElement.dataset.transitioning = 'true';
+          }
+          return;
+        }
+
+        if (isHomePage()) {
+          event.preventDefault();
+          triggerFallbackHomeExit(navElement, targetHref);
+        }
+      });
+    });
+
+    if (!headerLink) {
+      return;
+    }
+
+    headerLink.addEventListener('click', function(event) {
+      const targetHref = this.getAttribute('href') || 'index.html';
+      if (!targetHref || !isPlainLeftClick(event) || isCurrentPageLink(targetHref)) {
+        return;
+      }
+
+      if (!isHomeTarget(targetHref)) {
+        return;
+      }
+
+      if (useViewTransitions) {
+        if (!isHomePage()) {
+          setTransitionDirection('to-home');
+          document.body.classList.add('nav-transitioning-home');
+          navElement.dataset.transitioning = 'true';
+        }
+        return;
+      }
+
+      if (!isHomePage()) {
+        event.preventDefault();
+        triggerFallbackHomeEntry(navElement, targetHref);
+      }
+    });
+  }
+
+  function initializeNav() {
+    const navElement = getNavElement();
+    if (!navElement) {
+      return;
+    }
+
+    applyNavState(isHomePage());
+    setupMobileToggle(navElement, isHomePage());
+
+    if (navElement.dataset.navBindingsAttached === 'true') {
+      return;
+    }
+
+    if (!isMobileDevice()) {
+      attachDesktopNavigation(navElement, supportsViewTransitions());
+    }
+
+    navElement.dataset.navBindingsAttached = 'true';
+  }
+
+  window.resetNavPosition = handleHistoryNavigation;
+  consumeTransitionDirection();
+  initializeNav();
+
+  if (window.performance && window.performance.navigation && window.performance.navigation.type === 2) {
+    handleHistoryNavigation();
   } else if (window.performance && window.performance.getEntriesByType) {
-    // Newer method for checking navigation type
     const navEntries = window.performance.getEntriesByType('navigation');
     if (navEntries.length > 0 && navEntries[0].type === 'back_forward') {
-      // This is a back/forward navigation
       handleHistoryNavigation();
     }
   }
-  
-  // Add a dedicated function for bfcache (back-forward cache) scenarios
+
   window.addEventListener('pageshow', function(event) {
-    // If the page is loaded from the bfcache
     if (event.persisted) {
-      console.log('Page restored from bfcache, fixing nav position');
       handleHistoryNavigation();
     }
   });
-  // Listen for browser history navigation events (back/forward buttons)
+
   window.addEventListener('popstate', function() {
-    // Reset the nav position immediately when history state changes
     handleHistoryNavigation();
-  });    // Defer non-critical navigation setup
+  });
+
   document.addEventListener('DOMContentLoaded', function() {
-    const navElement = document.getElementById('animated-nav');
-    if (!navElement) return;
-    
-    // Always re-run positioning logic to ensure consistency across browsers
-    // This catches edge cases, especially in Safari and Firefox
-    handleHistoryNavigation();
-    
-    const onHomePage = isHomePage();
-      // Store current page for navigation reference
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Set up interaction events - only for desktop view
-    if (!isMobileDevice()) {
-      if (onHomePage) {
-        setupHomePageLinks();
-      } else {
-        setupInnerPageLinks();
-      }
-    } else {
-      // For mobile, just set up normal navigation without animations
-      setupMobileNavigation();
-    }
-    
-    // Additional mobile menu setup as fallback - ensure it works regardless
-    const mobileToggle = document.getElementById('mobile-nav-toggle');
-    if (mobileToggle && !onHomePage) {
-      // Ensure the mobile menu button has a working click handler
-      if (!mobileToggle._clickHandler) {
-        const clickHandler = function() {
-          this.classList.toggle('active');
-          navElement.classList.toggle('mobile-menu-open');
-          console.log('Fallback mobile menu toggled');  // Debug
-        };
-        
-        mobileToggle._clickHandler = clickHandler;
-        mobileToggle.addEventListener('click', clickHandler);
-      }
-    }
-      function setupMobileNavigation() {
-      // Setup all navigation links to work without animations on mobile
-      const navLinks = document.querySelectorAll('#animated-nav .nav-link, #animated-nav .nav-header-link');
-      
-      navLinks.forEach(link => {
-        // Remove any existing event listeners and set default behavior
-        link.removeEventListener('click', preventDefaultNavigation);
-        
-        // No animations needed for mobile, just let links work normally
-      });
-      
-      // Ensure mobile menu button functionality is preserved
-      const mobileToggle = document.getElementById('mobile-nav-toggle');
-      if (mobileToggle) {
-        // Re-setup mobile menu if needed (in case it was affected)
-        if (!mobileToggle._clickHandler) {
-          const navElement = document.getElementById('animated-nav');
-          const clickHandler = function() {
-            this.classList.toggle('active');
-            if (navElement) {
-              navElement.classList.toggle('mobile-menu-open');
-            }
-            console.log('Mobile menu toggled');  // Debug
-          };
-          
-          mobileToggle._clickHandler = clickHandler;
-          mobileToggle.addEventListener('click', clickHandler);
-        }
-      }
-    }
-    
-    function preventDefaultNavigation(e) {
-      e.preventDefault();
-      const targetHref = this.getAttribute('href');
-      setTimeout(function() {
-        window.location.href = targetHref;
-      }, 50);
-    }
-      function highlightCurrentPage() {
-      // Handle all nav links
-      const navLinks = document.querySelectorAll('#animated-nav .nav-link');
-      navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
-        if (linkPath === currentPath) {
-          link.classList.add('active-link');
-        } else {
-          link.classList.remove('active-link');
-        }
-      });
-      
-      // Handle header link for home page
-      const headerLink = document.querySelector('#animated-nav .nav-header-link');
-      if (headerLink && isHomePage()) {
-        headerLink.classList.add('active-link');
-      } else if (headerLink) {
-        headerLink.classList.remove('active-link');
-      }
-    }
-    
-    // Set up animated transitions from home page (desktop only)
-    function setupHomePageLinks() {
-      // Handle all nav links except home link
-      const navLinks = document.querySelectorAll('#animated-nav .nav-link');
-      navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          // Don't follow the link immediately
-          e.preventDefault();
-          
-          // Get target page URL
-          const targetHref = this.getAttribute('href');
-          
-          // Get navigation elements to animate
-          const navHeader = document.querySelector('#animated-nav .nav-header');
-          const navHeaderLink = document.querySelector('#animated-nav .nav-header-link');
-          
-          // Get the h5 element if it exists
-          const subtitleElement = document.querySelector('#animated-nav .nav-header h5');
-          
-          // Collapse the h5 element during transition for better alignment
-          if (subtitleElement) {
-            // First reduce opacity
-            subtitleElement.style.opacity = '0';
-            subtitleElement.style.transition = 'opacity 0.3s ease, max-width 0.5s ease, padding 0.5s ease, margin 0.5s ease, height 0.5s ease';
-            
-            // Then collapse dimensions to take up no space
-            setTimeout(function() {
-              subtitleElement.style.maxWidth = '0';
-              subtitleElement.style.padding = '0';
-              subtitleElement.style.margin = '0';
-              subtitleElement.style.height = '0';
-              subtitleElement.style.overflow = 'hidden';
-            }, 100);
-          }
-          
-          // Step 1: Start moving header link to smaller size - with precise sizing
-          if (navHeaderLink) {
-            navHeaderLink.style.fontSize = '1.5em';
-            navHeaderLink.style.transition = 'font-size 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-          }
-          
-          // Step 2: Start moving the overall nav to top-left
-          navElement.classList.remove('nav-center');
-          navElement.classList.add('nav-top-left');
-          
-          // Change the nav-header to horizontal layout with exact matching margins
-          if (navHeader) {
-            navHeader.style.marginBottom = '0';
-            navHeader.style.marginRight = '20px';
-          }
-          
-          // After the animation completes, navigate to the target page
-          setTimeout(function() {
-            window.location.href = targetHref;
-          }, 800);
-        });
-      });
-    }
-    
-    // Set up animated transitions from inner pages back to home (desktop only)
-    function setupInnerPageLinks() {
-      // Handle home link animation when not on home page
-      const homeLink = document.querySelector('#animated-nav .nav-header-link');
-      if (homeLink) {
-        homeLink.addEventListener('click', function(e) {
-          // Don't follow the link immediately if not on home page
-          e.preventDefault();
-          
-          // Get navigation elements to animate
-          const navHeader = document.querySelector('#animated-nav .nav-header');
-          
-          // Add an h5 element with proper dimensions to ensure correct spacing during transition
-          if (!document.querySelector('#animated-nav .nav-header h5')) {
-            const emptyH5 = document.createElement('h5');
-            
-            // Start with collapsed dimensions
-            emptyH5.style.opacity = '0';
-            emptyH5.style.maxWidth = '0';
-            emptyH5.style.padding = '0';
-            emptyH5.style.margin = '0';
-            emptyH5.style.height = '0';
-            emptyH5.style.overflow = 'hidden';
-            emptyH5.style.transition = 'opacity 0.3s ease, max-width 0.5s ease, padding 0.5s ease, margin 0.5s ease, height 0.5s ease';
-            
-            // Add the element to the DOM
-            navHeader.appendChild(emptyH5);
-            
-            // Force browser reflow
-            void emptyH5.offsetWidth;
-            
-            // Expand dimensions to match the home page h5
-            emptyH5.style.maxWidth = '100%';
-            emptyH5.style.height = '50px'; // Standard h5 height
-            emptyH5.style.marginTop = '8px';
-            emptyH5.style.marginBottom = '8px';
-            
-            // Fade in the h5 as we transition
-            setTimeout(function() {
-              emptyH5.style.opacity = '1';
-            }, 300);
-          }
-          
-          // Start moving nav from top-left to center
-          navElement.classList.remove('nav-top-left');
-          navElement.classList.add('nav-center');
-          
-          // Change styles to match home page configuration with exact values
-          if (navHeader) {
-            navHeader.style.marginBottom = '25px';
-            navHeader.style.marginRight = '0';
-          }
-          
-          // Use the exact font size with proper transition
-          this.style.fontSize = '3em';
-          this.style.transition = 'font-size 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-          
-          // After animation completes, navigate to home
-          setTimeout(function() {
-            window.location.href = 'index.html';
-          }, 800);
-        });
-      }
-    }
-    
-    // Handle resize events for responsive changes
-    window.addEventListener('resize', function() {
-      // If the width crosses our mobile breakpoint, reload the page to get the proper layout
-      const wasMobile = isMobileDevice();
-      setTimeout(function() {
-        const isMobileNow = isMobileDevice();
-        if (wasMobile !== isMobileNow) {
-          window.location.reload();
-        }
-      }, 100); // Small delay to prevent multiple reloads
-    });
+    initializeNav();
   });
 
-  // Additional safety net for mobile menu - wait for full page load
-  window.addEventListener('load', function() {
-    const mobileToggle = document.getElementById('mobile-nav-toggle');
-    const navElement = document.getElementById('animated-nav');
-    
-    if (mobileToggle && navElement && !isHomePage()) {
-      // Final check - ensure mobile menu button works
-      if (!mobileToggle._clickHandler) {
-        console.log('Setting up mobile menu as final safety net');
-        const clickHandler = function() {
-          this.classList.toggle('active');
-          navElement.classList.toggle('mobile-menu-open');
-          console.log('Safety net mobile menu toggled');
-        };
-        
-        mobileToggle._clickHandler = clickHandler;
-        mobileToggle.addEventListener('click', clickHandler);
+  window.addEventListener('resize', function() {
+    const wasMobile = isMobileDevice();
+    window.setTimeout(function() {
+      const isMobileNow = isMobileDevice();
+      if (wasMobile !== isMobileNow) {
+        window.location.reload();
       }
-    }
+    }, 100);
   });
-
 })();

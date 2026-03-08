@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kyle Mathias - Resume. Senior Business Systems and Automation Engineer specializing in Integrations, iPaaS, and Full Stack Web Development.">
-    <meta name="keywords" content="Kyle Mathias, resume, CV, Senior Business Systems Engineer, Automation Engineer, Integrations, iPaaS, Full Stack Web Development, experience, skills">
+    <meta name="description" content="Kyle Mathias - Resume. Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
+    <meta name="keywords" content="Kyle Mathias, resume, CV, Senior Software Engineer, Internal Tools, Integrations, APIs, iPaaS, Azure, Cosmos DB, RAG, experience, skills">
     <title>Resume | Kyle Mathias</title>
       <!-- Standard Image Meta Tag -->
     <meta name="image" content="https://kylemathias.com/assets/shareimage.jpg">
@@ -14,20 +14,20 @@
     <meta property="og:url" content="https://kylemathias.com">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Kyle Mathias">
-    <meta property="og:description" content="Kyle Mathias is a Senior Business Systems and Automation Engineer specializing in Integrations, iPaaS, and Full Stack Web Development. Explore his portfolio, resume, and contact information.">
+    <meta property="og:description" content="Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     <meta property="og:image" content="https://kylemathias.com/assets/shareimage.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Kyle Mathias - Senior Business Systems and Automation Engineer, Integrations, iPaaS, and Full Stack Web Development">
+    <meta property="og:image:alt" content="Kyle Mathias - Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="kylemathias.com">
     <meta property="twitter:url" content="https://kylemathias.com">
     <meta name="twitter:title" content="Kyle Mathias">
-    <meta name="twitter:description" content="Kyle Mathias is a Senior Business Systems and Automation Engineer specializing in Integrations, iPaaS, and Full Stack Web Development. Explore his portfolio, resume, and contact information.">
+    <meta name="twitter:description" content="Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     <meta name="twitter:image" content="https://kylemathias.com/assets/shareimage.jpg">
-    <meta name="twitter:image:alt" content="Kyle Mathias - Senior Business Systems and Automation Engineer, Integrations, iPaaS, and Full Stack Web Development">
+    <meta name="twitter:image:alt" content="Kyle Mathias - Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
     
     <!-- Preconnect to critical origins -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,8 +60,12 @@
         #animated-nav.nav-top-left {
           top: 20px;
           left: 20px;
-          background-color: rgba(0, 0, 0, 0.7);
-          border-radius: 5px;
+          background-color: rgba(5, 14, 28, 0.66);
+          border: 1px solid rgba(125, 211, 252, 0.2);
+          border-radius: 22px;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
+          backdrop-filter: blur(18px) saturate(150%);
+          -webkit-backdrop-filter: blur(18px) saturate(150%);
         }
         
         #animated-nav .nav-header {
@@ -198,77 +202,6 @@
           }
         }
 
-        #page-content {
-          margin-top: 80px;
-          color: white;
-          padding: 20px;
-          max-width: 800px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-        
-        .resume-container {
-          background-color: rgba(0, 0, 0, 0.5);
-          border-radius: 8px;
-          padding: 25px;
-          margin-top: 30px;
-          margin-bottom: 40px;
-          text-align: center;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }        .download-btn {
-          display: inline-flex;
-          align-items: center;
-          background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
-          color: white;
-          padding: 12px 30px;
-          border-radius: 30px;
-          text-decoration: none;
-          font-weight: 600;
-          transition: all 0.3s ease;
-          border: none;
-          margin-top: 15px;
-          margin-bottom: 20px;
-          cursor: pointer;
-        }
-
-        .download-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
-          color: white;
-          text-decoration: none;
-        }
-
-        .download-btn i {
-          margin-right: 10px;
-        }
-
-        .resume-date {
-          font-style: italic;
-          color: #aaa;
-          margin-bottom: 15px;
-          display: block;
-        }
-        
-        .pdf-container {
-          width: 100%;
-          max-width: 800px;
-          margin: 0 auto;
-          height: 800px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-          overflow: hidden;
-          background-color: rgba(0, 0, 0, 0.3);
-        }
-        
-        .pdf-container object {
-          background-color: white;
-        }
-        
-        @media (max-width: 768px) {
-          .pdf-container {
-            height: 500px;
-          }
         }    </style>
     
     <!-- Google tag (gtag.js) -->
@@ -282,7 +215,7 @@
     </script>
 </head>
 
-<body>
+<body class="resume-page">
     <!-- Animated Navigation Component with top-left positioning -->
     <div id="animated-nav" class="nav-top-left">
         <button id="mobile-nav-toggle" aria-label="Toggle mobile menu">
@@ -290,21 +223,27 @@
             <span></span>
             <span></span>
         </button>        <div class="nav-header">
-            <a href="./" class="nav-header-link">Kyle Mathias</a>
+          <a href="index.html" class="nav-header-link">Kyle Mathias</a>
+          <p class="subtitle">Senior Software Engineer (Internal Tools, Integrations & Automation)</p>
+          <p class="subtitle-skills">Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG</p>
         </div>
         <div class="nav-links">
             <a href="about.html" class="nav-link" id="about-link">About</a>
             <a href="resume.html" class="nav-link active-link" id="resume-link">Resume</a>
+          <a href="projects.html" class="nav-link" id="projects-link">Projects</a>
             <a href="contact.html" class="nav-link" id="contact-link">Contact</a>
         </div>
     </div>
 
     <!-- Page content container - moved before canvas for better LCP -->
-    <div id="page-content" class="content-container">
-        <h1 class="mb-4">Resume</h1>
+    <main id="page-content" class="content-container inner-page-shell">
+      <header class="page-hero">
+        <h1>Resume</h1>
+        <p class="page-intro">A current snapshot of my work across software engineering, automation, integrations, and internal product delivery.</p>
+      </header>
 
-        <!-- Resume Download Section -->
-        <div class="resume-container">
+      <!-- Resume Download Section -->
+      <div class="resume-container page-panel">
             <!-- Resume date -->
             <span class="resume-date">Last updated: May 10, 2025</span>
               <!-- Download button with icon -->
@@ -320,7 +259,7 @@
                 </object>
             </div>
         </div>
-    </div>
+          </main>
 
     <!-- Canvas for 3D background - loaded after critical content -->
     <canvas id="3D-background-three-canvas5"></canvas>
