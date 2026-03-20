@@ -1,9 +1,11 @@
 {
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.9.0",
-    "@smithery/sdk": "^1.0.4"
-  },
+  "name": "kylemathias.github.io",
+  "private": true,
+  "description": "Static portfolio site for kylemathias.com",
   "scripts": {
-    "build:css": "npx tailwindcss -i ./styles/tailwind.css -o ./styles/main.css --minify"
+    "dev": "python3 -m http.server 4321",
+    "serve": "npm run dev",
+    "generate:projects": "python3 ./scripts/generate-projects-data.py",
+    "check": "python3 -m py_compile ./scripts/generate-projects-data.py"
   }
 }

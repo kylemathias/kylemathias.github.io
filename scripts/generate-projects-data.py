@@ -1,10 +1,33 @@
-from pathlib import Path
 import json
+import os
 import re
+import sys
+from pathlib import Path
 
-summary_dir = Path('/Users/kylemathias/Downloads/project-portfolio-summaries')
 web_repo = Path(__file__).resolve().parents[1]
 out_path = web_repo / 'js' / 'projects-data.js'
+
+
+def resolve_summary_dir() -> Path:
+    configured = os.environ.get('PROJECT_SUMMARY_DIR')
+    if configured:
+        candidate = Path(configured).expanduser()
+    else:
+        candidate = web_repo.parent / 'project-portfolio-summaries'
+
+    if not candidate.exists():
+        print(
+            'Project summaries directory not found. '
+            'Set PROJECT_SUMMARY_DIR or clone/link the summaries repo next to this site repo.',
+            file=sys.stderr,
+        )
+        print(f'Expected path: {candidate}', file=sys.stderr)
+        raise SystemExit(1)
+
+    return candidate
+
+
+summary_dir = resolve_summary_dir()
 
 excluded_project_ids = {
     'netai-chat',
