@@ -125,19 +125,21 @@
         }
         
         /* Mobile menu styles */
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
           #animated-nav.nav-top-left {
             width: 100%;
             left: 0;
+            right: 0;
             top: 0;
-            padding: 15px;
+            box-sizing: border-box;
+            padding: calc(15px + env(safe-area-inset-top, 0px)) 15px calc(15px + env(safe-area-inset-bottom, 0px)) 15px;
             border-radius: 0;
           }
           
           #mobile-nav-toggle {
             display: block;
             position: absolute;
-            top: 15px;
+            top: calc(15px + env(safe-area-inset-top, 0px));
             left: 15px;
             background: transparent;
             border: none;
@@ -176,6 +178,8 @@
           /* Show all navigation elements when mobile menu is open */
           #animated-nav.nav-top-left.mobile-menu-open {
             height: 100vh;
+            height: 100dvh;
+            overflow-y: auto;
             background-color: rgba(0, 0, 0, 0.95);
           }
           
@@ -246,15 +250,15 @@
             <!-- Resume date -->
             <span class="resume-date">Last updated: May 10, 2025</span>
               <!-- Download button with icon -->
-            <a href="assets/KyleMathiasResume.pdf" class="download-btn" download>
+            <a href="assets/KyleMathiasResume-1773974470.pdf" class="download-btn" download="KyleMathiasResume.pdf">
                 <i class="fas fa-download"></i> Download Resume
             </a>
             
             <!-- PDF Viewer -->
             <div class="pdf-container">
-                <object data="assets/KyleMathiasResume.pdf" type="application/pdf" width="100%" height="100%">
+                <object data="assets/KyleMathiasResume-1773974470.pdf" type="application/pdf" width="100%" height="100%">
                     <p>It appears your browser doesn't support embedded PDFs. 
-                    <a href="assets/KyleMathiasResume.pdf">Click here to download my resume instead.</a></p>
+                    <a href="assets/KyleMathiasResume-1773974470.pdf" download="KyleMathiasResume.pdf">Click here to download my resume instead.</a></p>
                 </object>
             </div>
         </div>

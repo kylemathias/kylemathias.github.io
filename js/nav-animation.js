@@ -1,6 +1,6 @@
 // Navigation transition controller
 (function() {
-  const MOBILE_BREAKPOINT = 768;
+  const MOBILE_BREAKPOINT = 640;
   const NAV_DIRECTION_KEY = 'km-nav-direction';
   const FALLBACK_DURATION_MS = 560;
 
