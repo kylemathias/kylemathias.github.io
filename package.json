@@ -6,6 +6,7 @@
     "dev": "python3 -m http.server 4321",
     "serve": "npm run dev",
     "generate:projects": "python3 ./scripts/generate-projects-data.py",
+    "sync:brand": "node ./scripts/sync-site-brand.mjs",
     "check": "python3 -m py_compile ./scripts/generate-projects-data.py"
   }
 }

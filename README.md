@@ -30,6 +30,10 @@ Example:
 PROJECT_SUMMARY_DIR=../project-portfolio-summaries npm run generate:projects
 ```
 
+## Site title and SEO
+
+Edit `data/site-brand.json`, then run `npm run sync:brand` to update meta tags and nav subtitles across all pages. On Windows without Python, the Node script runs automatically; you can also use `python3 scripts/sync-site-brand.py` if Python is installed.
+
 ## Notes
 
 - `styles/main.css` is a committed stylesheet. There is no Tailwind build step in the current site.

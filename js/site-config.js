@@ -28,6 +28,20 @@ const siteConfig = {
         }
     ],
 
+    // site-brand:generated-start
+    brand: {
+        name: "Kyle Mathias",
+        titleLine: "Marketing Technology Solutions Architect",
+        taglineLine: "Integrations · iPaaS · MarTech",
+        titleFull: "Marketing Technology Solutions Architect | Integrations · iPaaS · MarTech",
+        metaDescription: "Kyle Mathias is a Marketing Technology Solutions Architect connecting marketing platforms, automating workflows, and onboarding enterprise MarTech stacks. Core focus: Integrations · iPaaS · MarTech.",
+        metaKeywords: "Kyle Mathias, Marketing Technology Solutions Architect, MarTech, Integrations, iPaaS, Tray.io, Marketo, SFDC, portfolio, resume, contact",
+        shareImageAlt: "Kyle Mathias - Marketing Technology Solutions Architect | Integrations · iPaaS · MarTech",
+        siteUrl: "https://kylemathias.com",
+        shareImage: "https://kylemathias.com/assets/shareimage.jpg"
+    }
+    // site-brand:generated-end
+
     // Get all pages that should appear in navigation
     getNavPages: function() {
         return this.pages.filter(page => page.showInNav);
