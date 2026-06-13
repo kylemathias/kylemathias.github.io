@@ -1,0 +1,68 @@
+{
+  "name": "Kyle Mathias",
+  "titleLine": "Marketing Technology Solutions Architect",
+  "taglineLine": "Integrations · iPaaS · MarTech",
+  "titleFull": "Marketing Technology Solutions Architect | Integrations · iPaaS · MarTech",
+  "metaDescription": "Kyle Mathias is a Marketing Technology Solutions Architect connecting marketing platforms, automating workflows, and onboarding enterprise MarTech stacks. Core focus: Integrations · iPaaS · MarTech.",
+  "metaKeywords": "Kyle Mathias, Marketing Technology Solutions Architect, MarTech, Integrations, iPaaS, Tray.io, Marketo, SFDC, portfolio, resume, contact",
+  "shareImageAlt": "Kyle Mathias - Marketing Technology Solutions Architect | Integrations · iPaaS · MarTech",
+  "siteUrl": "https://kylemathias.com",
+  "shareImage": "https://kylemathias.com/assets/shareimage.jpg",
+  "pages": {
+    "index": {
+      "file": "index.html",
+      "title": "Kyle Mathias",
+      "descriptionPrefix": "",
+      "ogUrl": "https://kylemathias.com",
+      "twitterUrl": "https://kylemathias.com",
+      "ogTitle": "Kyle Mathias"
+    },
+    "about": {
+      "file": "about.html",
+      "title": "About | Kyle Mathias",
+      "descriptionPrefix": "About Kyle Mathias. ",
+      "keywordsSuffix": "about, ",
+      "ogUrl": "https://kylemathias.com",
+      "twitterUrl": "https://kylemathias.com",
+      "ogTitle": "Kyle Mathias"
+    },
+    "resume": {
+      "file": "resume.html",
+      "title": "Resume | Kyle Mathias",
+      "descriptionPrefix": "Kyle Mathias - Resume. ",
+      "keywordsSuffix": "resume, CV, experience, skills, ",
+      "ogUrl": "https://kylemathias.com",
+      "twitterUrl": "https://kylemathias.com",
+      "ogTitle": "Kyle Mathias"
+    },
+    "contact": {
+      "file": "contact.html",
+      "title": "Contact | Kyle Mathias",
+      "descriptionPrefix": "Contact Kyle Mathias. ",
+      "keywordsSuffix": "contact, ",
+      "ogUrl": "https://kylemathias.com",
+      "twitterUrl": "https://kylemathias.com",
+      "ogTitle": "Kyle Mathias"
+    },
+    "thank-you": {
+      "file": "thank-you.html",
+      "title": "Thank You | Kyle Mathias",
+      "descriptionPrefix": "Thank you for contacting Kyle Mathias. ",
+      "keywordsSuffix": "thank you, contact, confirmation, ",
+      "ogUrl": "https://kylemathias.com",
+      "twitterUrl": "https://kylemathias.com",
+      "ogTitle": "Kyle Mathias"
+    },
+    "projects": {
+      "file": "projects.html",
+      "title": "Projects | Kyle Mathias",
+      "description": "Projects by Kyle Mathias — scrollable timeline of full-stack, automation, analytics, and AI product work.",
+      "keywords": "Kyle Mathias, projects, timeline, portfolio, automation, full stack, analytics, AI",
+      "ogUrl": "https://kylemathias.com/projects.html",
+      "twitterUrl": "https://kylemathias.com/projects.html",
+      "ogTitle": "Projects | Kyle Mathias",
+      "ogDescription": "A scrollable timeline of projects across web apps, desktop tools, automation, and analytics.",
+      "shareImageAlt": "Kyle Mathias Projects Timeline"
+    }
+  }
+}

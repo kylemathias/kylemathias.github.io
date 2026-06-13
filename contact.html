@@ -4,30 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Contact Kyle Mathias. Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
-    <meta name="keywords" content="Kyle Mathias, contact, Senior Software Engineer, Internal Tools, Integrations, APIs, iPaaS, Azure, Cosmos DB, RAG, portfolio">
+    <!-- site-brand:meta-start -->
+    <meta name="description" content="Contact Kyle Mathias. Kyle Mathias is a Marketing Technology Solutions Architect connecting marketing platforms, automating workflows, and onboarding enterprise MarTech stacks. Core focus: Integrations · iPaaS · MarTech.">
+    <meta name="keywords" content="Kyle Mathias, contact, Marketing Technology Solutions Architect, MarTech, Integrations, iPaaS, Tray.io, Marketo, SFDC, portfolio, resume, contact">
     <title>Contact | Kyle Mathias</title>
-      <!-- Standard Image Meta Tag -->
+    <!-- Standard Image Meta Tag -->
     <meta name="image" content="https://kylemathias.com/assets/shareimage.jpg">
-    
+
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="https://kylemathias.com">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Kyle Mathias">
-    <meta property="og:description" content="Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
+    <meta property="og:description" content="Contact Kyle Mathias. Kyle Mathias is a Marketing Technology Solutions Architect connecting marketing platforms, automating workflows, and onboarding enterprise MarTech stacks. Core focus: Integrations · iPaaS · MarTech.">
     <meta property="og:image" content="https://kylemathias.com/assets/shareimage.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Kyle Mathias - Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
-    
+    <meta property="og:image:alt" content="Kyle Mathias - Marketing Technology Solutions Architect | Integrations · iPaaS · MarTech">
+
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="kylemathias.com">
     <meta property="twitter:url" content="https://kylemathias.com">
     <meta name="twitter:title" content="Kyle Mathias">
-    <meta name="twitter:description" content="Kyle Mathias is a Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
+    <meta name="twitter:description" content="Contact Kyle Mathias. Kyle Mathias is a Marketing Technology Solutions Architect connecting marketing platforms, automating workflows, and onboarding enterprise MarTech stacks. Core focus: Integrations · iPaaS · MarTech.">
     <meta name="twitter:image" content="https://kylemathias.com/assets/shareimage.jpg">
-    <meta name="twitter:image:alt" content="Kyle Mathias - Senior Software Engineer (Internal Tools, Integrations & Automation). Core focus: Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG.">
+    <meta name="twitter:image:alt" content="Kyle Mathias - Marketing Technology Solutions Architect | Integrations · iPaaS · MarTech">
+    <!-- site-brand:meta-end -->
     
     <!-- Preconnect to critical origins -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -250,8 +252,10 @@
         </button>
         <div class="nav-header">
           <a href="index.html" class="nav-header-link">Kyle Mathias</a>
-          <p class="subtitle">Senior Software Engineer (Internal Tools, Integrations & Automation)</p>
-          <p class="subtitle-skills">Internal Tools · Integrations (APIs/iPaaS) · Azure/Cosmos DB · RAG</p>
+          <!-- site-brand:nav-subtitles-start -->
+          <p class="subtitle">Marketing Technology Solutions Architect</p>
+          <p class="subtitle-skills">Integrations · iPaaS · MarTech</p>
+          <!-- site-brand:nav-subtitles-end -->
         </div>
         <div class="nav-links">
             <a href="about.html" class="nav-link" id="about-link">About</a>
@@ -265,7 +269,7 @@
     <main id="page-content" class="content-container inner-page-shell">
       <header class="page-hero">
         <h1>Get In Touch</h1>
-        <p class="page-intro">Available for senior software engineering roles focused on internal tools, integrations, automation, and applied AI. Open to remote and Bay Area opportunities.</p>
+        <p class="page-intro">Available for Marketing Technology Solutions Architect roles focused on integrations, MarTech onboarding, automation, and enterprise platform work. Open to remote and Bay Area opportunities.</p>
       </header>
         
       <div class="contact-container">
@@ -274,6 +278,16 @@
                 <h2 class="contact-heading">Contact Information</h2>
                 <ul class="contact-list">
                     
+                    <li class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-item-content">
+                            <h3>Email</h3>
+                            <p><a href="mailto:kylemathias@gmail.com">kylemathias@gmail.com</a></p>
+                        </div>
+                    </li>
+
                     <li class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
@@ -306,43 +320,43 @@
                 </div>
             </div>
             
-            <!-- Contact Form -->
+            <!-- Contact compose -->
             <div class="contact-form">
                 <h2 class="contact-heading">Send Me a Message</h2>
-                <form id="contactForm" action="https://formsubmit.co/492ec39faac0e7822756071b67449d07" method="POST">
-                    <!-- FormSubmit.co configuration -->
-                    <input type="hidden" name="_subject" value="New message from your website!">
-                    <input type="hidden" name="_template" value="table">
-                    <input type="hidden" name="_captcha" value="true">
-                    <input type="hidden" name="_next" value="https://kylemathias.com/thank-you.html">
-                    
+                <div id="contactCompose">
                     <div class="form-group">
-                        <label for="name" class="form-label">Your Name</label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required>
+                        <label for="contactName" class="form-label">Your Name</label>
+                        <input type="text" id="contactName" class="form-control" placeholder="John Doe" autocomplete="name">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="email" class="form-label">Your Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
+                        <label for="contactSubject" class="form-label">Subject</label>
+                        <input type="text" id="contactSubject" class="form-control" placeholder="Let's connect!" autocomplete="off">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Project Inquiry" required>
+                        <label for="contactMessage" class="form-label">Message</label>
+                        <textarea id="contactMessage" class="form-control" placeholder="Tell me about your project or inquiry..."></textarea>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea id="message" name="message" class="form-control" placeholder="Tell me about your project or inquiry..." required></textarea>
+
+                    <p class="compose-note">Choose your email app — you'll review and send the message yourself.</p>
+                    <p id="composeError" class="compose-error" hidden></p>
+
+                    <div class="compose-actions">
+                        <button type="button" class="compose-btn compose-btn-default" data-compose-provider="default">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <span class="compose-btn-label">Default app</span>
+                        </button>
+                        <button type="button" class="compose-btn compose-btn-gmail" data-compose-provider="gmail">
+                            <i class="fab fa-google" aria-hidden="true"></i>
+                            <span class="compose-btn-label">Gmail</span>
+                        </button>
+                        <button type="button" class="compose-btn compose-btn-outlook" data-compose-provider="outlook">
+                            <i class="fab fa-microsoft" aria-hidden="true"></i>
+                            <span class="compose-btn-label">Outlook</span>
+                        </button>
                     </div>
-                    
-                    <!-- Anti-spam honeypot field -->
-                    <input type="text" name="_honey" style="display:none">
-                    
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Send Message
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
           </main>
@@ -362,25 +376,7 @@
     <script src="./js/simplex-noise.min.js" defer></script>
     <script src="./js/3d-hero-background.js" defer></script>
     <script src="./js/nav-animation.js" defer></script>
-    
-    <!-- Contact Form Handler -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const contactForm = document.getElementById('contactForm');
-            
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    // Create submit button with loading state
-                    const submitBtn = contactForm.querySelector('.submit-btn');
-                    const originalBtnText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                    submitBtn.disabled = true;
-                    
-                    // We'll let FormSubmit.co handle the actual submission
-                });
-            }
-        });
-    </script>
+    <script src="./js/contact-compose.js" defer></script>
 </body>
 
 </html>
