@@ -94,6 +94,178 @@
     return 'highlights';
   }
 
+  function syncSortPickerUi(select, picker) {
+    const valueEl = picker.querySelector('.projects-sort-value');
+    const options = picker.querySelectorAll('.projects-sort-option');
+    const selectedOption = select.options[select.selectedIndex];
+
+    if (valueEl && selectedOption) {
+      valueEl.textContent = selectedOption.textContent;
+    }
+
+    options.forEach(function (optionEl) {
+      const isSelected = optionEl.getAttribute('data-value') === select.value;
+      optionEl.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+    });
+  }
+
+  function closeSortPicker(picker, trigger) {
+    picker.classList.remove('is-open');
+    trigger.setAttribute('aria-expanded', 'false');
+    picker.querySelector('.projects-sort-menu').hidden = true;
+  }
+
+  function openSortPicker(picker, trigger) {
+    picker.classList.add('is-open');
+    trigger.setAttribute('aria-expanded', 'true');
+    const menu = picker.querySelector('.projects-sort-menu');
+    menu.hidden = false;
+    const selected = menu.querySelector('[aria-selected="true"]') || menu.querySelector('.projects-sort-option');
+    if (selected) {
+      selected.focus();
+    }
+  }
+
+  function initProjectsSortPicker(select) {
+    if (!select || select.dataset.pickerReady === 'true') {
+      return;
+    }
+
+    const label = document.querySelector('label[for="projects-sort"]');
+    if (label && !label.id) {
+      label.id = 'projects-sort-label';
+    }
+
+    const picker = document.createElement('div');
+    picker.className = 'projects-sort-picker';
+
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'projects-sort-trigger';
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', 'projects-sort-listbox');
+    if (label) {
+      trigger.setAttribute('aria-labelledby', label.id);
+    }
+
+    const valueEl = document.createElement('span');
+    valueEl.className = 'projects-sort-value';
+    trigger.appendChild(valueEl);
+
+    const menu = document.createElement('ul');
+    menu.className = 'projects-sort-menu';
+    menu.id = 'projects-sort-listbox';
+    menu.setAttribute('role', 'listbox');
+    menu.hidden = true;
+
+    Array.from(select.options).forEach(function (option) {
+      const optionEl = document.createElement('li');
+      optionEl.className = 'projects-sort-option';
+      optionEl.setAttribute('role', 'option');
+      optionEl.setAttribute('data-value', option.value);
+      optionEl.setAttribute('tabindex', '-1');
+      optionEl.textContent = option.textContent;
+      menu.appendChild(optionEl);
+    });
+
+    select.classList.add('projects-sort-native');
+    select.tabIndex = -1;
+    select.setAttribute('aria-hidden', 'true');
+
+    select.parentNode.insertBefore(picker, select);
+    picker.appendChild(trigger);
+    picker.appendChild(menu);
+    picker.appendChild(select);
+
+    function chooseValue(value) {
+      if (select.value === value) {
+        closeSortPicker(picker, trigger);
+        trigger.focus();
+        return;
+      }
+
+      select.value = value;
+      syncSortPickerUi(select, picker);
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      closeSortPicker(picker, trigger);
+      trigger.focus();
+    }
+
+    trigger.addEventListener('click', function () {
+      if (picker.classList.contains('is-open')) {
+        closeSortPicker(picker, trigger);
+      } else {
+        openSortPicker(picker, trigger);
+      }
+    });
+
+    menu.addEventListener('click', function (event) {
+      const optionEl = event.target.closest('.projects-sort-option');
+      if (!optionEl) {
+        return;
+      }
+      chooseValue(optionEl.getAttribute('data-value'));
+    });
+
+    menu.addEventListener('keydown', function (event) {
+      const options = Array.from(menu.querySelectorAll('.projects-sort-option'));
+      const currentIndex = options.indexOf(document.activeElement);
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        const nextIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0;
+        options[nextIndex].focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1;
+        options[prevIndex].focus();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (document.activeElement.classList.contains('projects-sort-option')) {
+          chooseValue(document.activeElement.getAttribute('data-value'));
+        }
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeSortPicker(picker, trigger);
+        trigger.focus();
+      } else if (event.key === 'Home') {
+        event.preventDefault();
+        options[0].focus();
+      } else if (event.key === 'End') {
+        event.preventDefault();
+        options[options.length - 1].focus();
+      }
+    });
+
+    trigger.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (!picker.classList.contains('is-open')) {
+          openSortPicker(picker, trigger);
+        }
+      } else if (event.key === 'Escape') {
+        closeSortPicker(picker, trigger);
+      }
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!picker.contains(event.target)) {
+        closeSortPicker(picker, trigger);
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && picker.classList.contains('is-open')) {
+        closeSortPicker(picker, trigger);
+        trigger.focus();
+      }
+    });
+
+    syncSortPickerUi(select, picker);
+    select.dataset.pickerReady = 'true';
+  }
+
   function renderProjectsTimeline() {
     const root = document.getElementById('projects-timeline');
     if (!root || !Array.isArray(window.PROJECTS_DATA)) {
@@ -227,7 +399,13 @@
   document.addEventListener('DOMContentLoaded', function () {
     const sortSelect = document.getElementById('projects-sort');
     if (sortSelect) {
+      initProjectsSortPicker(sortSelect);
       sortSelect.value = 'highlights';
+      const picker = sortSelect.closest('.projects-sort-picker');
+      if (picker) {
+        syncSortPickerUi(sortSelect, picker);
+      }
+
       const handleSortChange = function () {
         sortMode = getCurrentSortMode();
         renderProjectsTimeline();

@@ -269,7 +269,7 @@
     <main id="page-content" class="content-container inner-page-shell">
       <header class="page-hero">
         <h1>Get In Touch</h1>
-        <p class="page-intro">Available for senior software engineering roles focused on internal tools, integrations, automation, and applied AI. Open to remote and Bay Area opportunities.</p>
+        <p class="page-intro">Available for Marketing Technology Solutions Architect roles focused on integrations, MarTech onboarding, automation, and enterprise platform work. Open to remote and Bay Area opportunities.</p>
       </header>
         
       <div class="contact-container">
@@ -278,6 +278,16 @@
                 <h2 class="contact-heading">Contact Information</h2>
                 <ul class="contact-list">
                     
+                    <li class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-item-content">
+                            <h3>Email</h3>
+                            <p><a href="mailto:kylemathias@gmail.com">kylemathias@gmail.com</a></p>
+                        </div>
+                    </li>
+
                     <li class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
@@ -310,43 +320,43 @@
                 </div>
             </div>
             
-            <!-- Contact Form -->
+            <!-- Contact compose -->
             <div class="contact-form">
                 <h2 class="contact-heading">Send Me a Message</h2>
-                <form id="contactForm" action="https://formsubmit.co/492ec39faac0e7822756071b67449d07" method="POST">
-                    <!-- FormSubmit.co configuration -->
-                    <input type="hidden" name="_subject" value="New message from your website!">
-                    <input type="hidden" name="_template" value="table">
-                    <input type="hidden" name="_captcha" value="true">
-                    <input type="hidden" name="_next" value="https://kylemathias.com/thank-you.html">
-                    
+                <div id="contactCompose">
                     <div class="form-group">
-                        <label for="name" class="form-label">Your Name</label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required>
+                        <label for="contactName" class="form-label">Your Name</label>
+                        <input type="text" id="contactName" class="form-control" placeholder="John Doe" autocomplete="name">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="email" class="form-label">Your Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
+                        <label for="contactSubject" class="form-label">Subject</label>
+                        <input type="text" id="contactSubject" class="form-control" placeholder="Let's connect!" autocomplete="off">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Project Inquiry" required>
+                        <label for="contactMessage" class="form-label">Message</label>
+                        <textarea id="contactMessage" class="form-control" placeholder="Tell me about your project or inquiry..."></textarea>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea id="message" name="message" class="form-control" placeholder="Tell me about your project or inquiry..." required></textarea>
+
+                    <p class="compose-note">Choose your email app — you'll review and send the message yourself.</p>
+                    <p id="composeError" class="compose-error" hidden></p>
+
+                    <div class="compose-actions">
+                        <button type="button" class="compose-btn compose-btn-default" data-compose-provider="default">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <span class="compose-btn-label">Default app</span>
+                        </button>
+                        <button type="button" class="compose-btn compose-btn-gmail" data-compose-provider="gmail">
+                            <i class="fab fa-google" aria-hidden="true"></i>
+                            <span class="compose-btn-label">Gmail</span>
+                        </button>
+                        <button type="button" class="compose-btn compose-btn-outlook" data-compose-provider="outlook">
+                            <i class="fab fa-microsoft" aria-hidden="true"></i>
+                            <span class="compose-btn-label">Outlook</span>
+                        </button>
                     </div>
-                    
-                    <!-- Anti-spam honeypot field -->
-                    <input type="text" name="_honey" style="display:none">
-                    
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Send Message
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
           </main>
@@ -366,25 +376,7 @@
     <script src="./js/simplex-noise.min.js" defer></script>
     <script src="./js/3d-hero-background.js" defer></script>
     <script src="./js/nav-animation.js" defer></script>
-    
-    <!-- Contact Form Handler -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const contactForm = document.getElementById('contactForm');
-            
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    // Create submit button with loading state
-                    const submitBtn = contactForm.querySelector('.submit-btn');
-                    const originalBtnText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                    submitBtn.disabled = true;
-                    
-                    // We'll let FormSubmit.co handle the actual submission
-                });
-            }
-        });
-    </script>
+    <script src="./js/contact-compose.js" defer></script>
 </body>
 
 </html>
